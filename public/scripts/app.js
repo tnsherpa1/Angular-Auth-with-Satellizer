@@ -158,7 +158,8 @@ function SignupController () {
 
 LogoutController.$inject = ["Account"]; // minification protection
 function LogoutController (Account) {
-  Account.logout()
+  Account.logout();
+  res.redirect('/login');
   // TODO #7: when the logout succeeds, redirect to the login page
 }
 
@@ -192,6 +193,7 @@ function Account($http, $q, $auth) {
 
   function signup(userData) {
     // TODO #8: signup (https://github.com/sahat/satellizer#authsignupuser-options)
+
     // then, set the token (https://github.com/sahat/satellizer#authsettokentoken)
     // returns a promise
   }
@@ -202,6 +204,7 @@ function Account($http, $q, $auth) {
         .satellizerLogin(userData) // login (https://github.com/sahat/satellizer#authloginuser-options)
         .then(
           function onSuccess(response) {
+            $auth.setToken(token);
             //TODO #3: set token (https://github.com/sahat/satellizer#authsettokentoken)
           },
 
@@ -219,7 +222,7 @@ function Account($http, $q, $auth) {
       .then(function() {
         self.user = null;
       })
-)
+    );
   }
 
   function currentUser() {
