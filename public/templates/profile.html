@@ -1,7 +1,7 @@
 <h3>{{main.currentUser.displayName}}</h3>
 <hr>
 <p><strong>Email:</strong> {{main.currentUser().email}}</p>
-<p><strong>Username:</strong> {{main.currentUser().username}}</p>
+<p><strong>Username:</strong> {{main.currentUser().userName}}</p>
 <p><strong>Joined:</strong> {{main.currentUser().created}}</p>
 <p><strong>Posts:</strong> {{main.currentUser().posts.length}}</p>
 
@@ -9,3 +9,19 @@
 <a href="#" ng-click="profile.showEditForm=true" ng-hide="profile.showEditForm" class="btn btn-default"><i class="fa fa-pencil"></i> Edit Profile</a>
 
 <!-- TODO #13 -->
+<form ng-submit="sc.updateProfile()" ng-show="profile.showEditForm">
+	<div class="form-group">
+	  <input type="text" ng-model="sc.new_user.displayName" class="form-control" placeholder="Full Name">
+	</div>
+  <div class="form-group">
+    <input type="text" ng-model="sc.new_user.userName" class="form-control" placeholder="Username">
+  </div>
+  <div class="form-group">
+    <input type="text" ng-model="sc.new_user.email" class="form-control" placeholder="Email">
+  </div>
+  <div class="form-group">
+    <input type="password" ng-model="sc.new_user.password" class="form-control" placeholder="Password">
+  </div>
+  <input type="submit" value="Update" class="btn btn-block btn-info">
+</form>
+

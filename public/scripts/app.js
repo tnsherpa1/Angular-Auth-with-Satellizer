@@ -122,8 +122,8 @@ function HomeController ($http) {
     });
 }
 
-LoginController.$inject = ["Account"]; // minification protection
-function LoginController (Account) {
+LoginController.$inject = ["$location", "Account"]; // minification protection
+function LoginController ($location, Account) {
   var vm = this;
   vm.new_user = {}; // form data
 
@@ -133,14 +133,14 @@ function LoginController (Account) {
       .then(function(){
          // TODO #4: clear sign up form
          vm.new_user = {};
-         res.redirect('/profile');
+         $location.path('/profile');
          // TODO #5: redirect to '/profile'
       });
   };
 }
 
-SignupController.$inject = []; // minification protection
-function SignupController () {
+SignupController.$inject = ['$location', 'Account']; // minification protection
+function SignupController ($location, Account) {
   var vm = this;
   vm.new_user = {}; // form data
 
@@ -150,16 +150,18 @@ function SignupController () {
       .then(
         function (response) {
           // TODO #9: clear sign up form
+          vm.new_user = {};
           // TODO #10: redirect to '/profile'
+          $location.path('/profile');
         }
       );
   };
 }
 
-LogoutController.$inject = ["Account"]; // minification protection
+LogoutController.$inject = ["$location","Account"]; // minification protection
 function LogoutController (Account) {
   Account.logout();
-  res.redirect('/login');
+  $location.path('/login');
   // TODO #7: when the logout succeeds, redirect to the login page
 }
 
@@ -192,7 +194,21 @@ function Account($http, $q, $auth) {
   self.updateProfile = updateProfile;
 
   function signup(userData) {
+  return (
+      $auth
+        .signup(userData) // signup (https://github.com/sahat/satellizer#authsignupuser-options)
+        .then(
+          function onSuccess(response) {
+            $auth.setToken(response.data.token); // set token (https://github.com/sahat/satellizer#authsettokentoken)
+          },
+
+          function onError(error) {
+            console.error(error);
+          }
+        )
+    );
     // TODO #8: signup (https://github.com/sahat/satellizer#authsignupuser-options)
+
 
     // then, set the token (https://github.com/sahat/satellizer#authsettokentoken)
     // returns a promise
@@ -201,7 +217,7 @@ function Account($http, $q, $auth) {
   function login(userData) {
     return (
       $auth
-        .satellizerLogin(userData) // login (https://github.com/sahat/satellizer#authloginuser-options)
+        .login(userData) // login (https://github.com/sahat/satellizer#authloginuser-options)
         .then(
           function onSuccess(response) {
             $auth.setToken(token);
