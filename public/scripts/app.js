@@ -159,7 +159,7 @@ function SignupController ($location, Account) {
 }
 
 LogoutController.$inject = ["$location","Account"]; // minification protection
-function LogoutController (Account) {
+function LogoutController ($location, Account) {
   Account.logout();
   $location.path('/login');
   // TODO #7: when the logout succeeds, redirect to the login page
